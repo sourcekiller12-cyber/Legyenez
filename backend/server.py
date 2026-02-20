@@ -1,9 +1,5 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import FastAPI, APIRouter
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
-from dotenv import load_dotenv
-from pathlib import Path
 import os
 import logging
 from datetime import datetime, timezone
@@ -11,14 +7,7 @@ from datetime import datetime, timezone
 # Import routes
 from routes import auth, scripts, hooks, metrics, videos, analytics
 from utils.database import init_database
-
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
-
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+from database import db
 
 # Create FastAPI app
 app = FastAPI(
@@ -77,6 +66,7 @@ async def startup_event():
 async def shutdown_event():
     """Close database connection on shutdown"""
     logger.info("Shutting down LEGYENEZ API Server...")
+    from database import client
     client.close()
 
 @app.get("/")

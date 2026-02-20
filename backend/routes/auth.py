@@ -4,14 +4,13 @@ from passlib.context import CryptContext
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 import os
-from motor.motor_asyncio import AsyncIOMotorClient
 from models import User, UserRegister, UserLogin, TokenResponse
 import logging
 
 logger = logging.getLogger(__name__)
 
 # Get MongoDB connection
-from server import db
+from database import db
 
 router = APIRouter()
 security = HTTPBearer()
