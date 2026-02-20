@@ -35,6 +35,7 @@ api_router.include_router(hooks.router, prefix="/hooks", tags=["Hooks"])
 api_router.include_router(metrics.router, prefix="/metrics", tags=["Metrics"])
 api_router.include_router(videos.router, prefix="/videos", tags=["Videos"])
 api_router.include_router(analytics.router, prefix="/analytics", tags=["Analytics"])
+api_router.include_router(notion_analytics.router, prefix="/notion-analytics", tags=["Notion Analytics"])
 
 # Include router in app
 app.include_router(api_router)
