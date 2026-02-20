@@ -82,7 +82,10 @@ export default function Login() {
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center space-y-3">
+            <Link to="/forgot-password" className="block text-amber-400 hover:text-amber-300 text-sm">
+              Elfelejtetted a jelszavad?
+            </Link>
             <p className="text-zinc-400 text-sm">
               Még nincs fiókod?{' '}
               <Link to="/register" className="text-amber-400 hover:text-amber-300 font-medium">
