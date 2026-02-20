@@ -36,7 +36,7 @@ export default function Login() {
       <div className="w-full max-w-md">
         {/* Logo/Title */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-amber-400 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h1 className="text-5xl font-bold text-amber-400 mb-2">
             LEGYENEZ
           </h1>
           <p className="text-zinc-400 text-sm">Short Video Factory</p>
