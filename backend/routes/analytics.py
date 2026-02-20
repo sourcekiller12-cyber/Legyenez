@@ -3,7 +3,7 @@ import logging
 from typing import Dict, List
 
 from routes.auth import get_current_user
-from server import db
+from database import db
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

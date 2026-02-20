@@ -41,7 +41,7 @@ class VideoGenerationService:
         Complete video generation workflow.
         """
         try:
-            from server import db
+            from database import db
             
             # Update status to processing
             await db.videos.update_one(
@@ -96,7 +96,7 @@ class VideoGenerationService:
         except Exception as e:
             logger.error(f"Error generating video {video_id}: {str(e)}")
             
-            from server import db
+            from database import db
             await db.videos.update_one(
                 {"id": video_id},
                 {

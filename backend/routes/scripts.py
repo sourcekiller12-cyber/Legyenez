@@ -14,7 +14,7 @@ from utils.script_helpers import (
     truncate_to_length,
     generate_german_script_prompt
 )
-from server import db
+from database import db
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

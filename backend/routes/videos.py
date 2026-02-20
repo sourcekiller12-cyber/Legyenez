@@ -5,7 +5,7 @@ import logging
 from models import Video, VideoGenerateRequest
 from routes.auth import get_current_user
 from services.video_service import VideoGenerationService
-from server import db
+from database import db
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
