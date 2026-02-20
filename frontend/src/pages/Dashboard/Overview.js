@@ -81,7 +81,7 @@ export default function DashboardOverview() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-500 mb-1">Hookók</p>
+                <p className="text-sm text-zinc-500 mb-1">Hookok</p>
                 <p className="text-4xl font-bold text-white">{stats.total_hooks}</p>
               </div>
               <div className="p-3 bg-blue-400/10 rounded-xl">
