@@ -11,6 +11,8 @@ import DashboardLayout from './layouts/DashboardLayout';
 // Auth Pages
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import ForgotPassword from './pages/Auth/ForgotPassword';
+import ResetPassword from './pages/Auth/ResetPassword';
 
 // Dashboard Pages
 import DashboardOverview from './pages/Dashboard/Overview';
