@@ -5,7 +5,7 @@ import logging
 from datetime import datetime, timezone
 
 # Import routes
-from routes import auth, scripts, hooks, metrics, videos, analytics
+from routes import auth, scripts, hooks, metrics, videos, analytics, notion_analytics
 from utils.database import init_database
 from database import db
 
