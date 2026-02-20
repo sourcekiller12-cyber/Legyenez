@@ -1,53 +1,63 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import { AuthProvider } from './contexts/AuthContext';
+import { LanguageProvider } from './contexts/LanguageContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+// Layouts
+import DashboardLayout from './layouts/DashboardLayout';
 
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
+// Auth Pages
+import Login from './pages/Auth/Login';
+import Register from './pages/Auth/Register';
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
+// Dashboard Pages
+import DashboardOverview from './pages/Dashboard/Overview';
+import ScriptGenerator from './pages/Dashboard/ScriptGenerator';
 
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <AuthProvider>
+      <LanguageProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
+            {/* Dashboard Routes */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<DashboardOverview />} />
+              <Route path="scripts" element={<ScriptGenerator />} />
+              <Route path="hooks" element={<div className="text-white">Hook Library (Coming Soon)</div>} />
+              <Route path="videos" element={<div className="text-white">Video Factory (Coming Soon)</div>} />
+              <Route path="analytics" element={<div className="text-white">Analytics (Coming Soon)</div>} />
+              <Route path="notion-analytics" element={<div className="text-white">Notion Analytics (Coming Soon)</div>} />
+              <Route path="settings" element={<div className="text-white">Settings (Coming Soon)</div>} />
+            </Route>
+
+            {/* Redirect root to dashboard or login */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+          
+          <Toaster 
+            position="top-right"
+            theme="dark"
+            richColors
+          />
+        </BrowserRouter>
+      </LanguageProvider>
+    </AuthProvider>
   );
 }
 
