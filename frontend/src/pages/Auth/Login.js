@@ -44,7 +44,7 @@ export default function Login() {
 
         {/* Login Card */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 shadow-2xl">
-          <h2 className="text-2xl font-semibold text-white mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h2 className="text-2xl font-semibold text-white mb-6">
             {t('login_title')}
           </h2>
 
