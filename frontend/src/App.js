@@ -20,6 +20,8 @@ import ScriptGenerator from './pages/Dashboard/ScriptGenerator';
 import NotionAnalytics from './pages/Dashboard/NotionAnalytics';
 import HookLibrary from './pages/Dashboard/HookLibrary';
 import VideoFactory from './pages/Dashboard/VideoFactory';
+import Analytics from './pages/Dashboard/Analytics';
+import Settings from './pages/Dashboard/Settings';
 
 import './App.css';
 
