@@ -82,7 +82,7 @@ export default function ScriptGenerator() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-4xl font-bold text-white mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+        <h1 className="text-4xl font-bold text-white mb-2" >
           Script Generátor
         </h1>
         <p className="text-zinc-400">AI-powered német faith-niche YouTube Shorts scriptek</p>

@@ -76,7 +76,7 @@ export default function DashboardOverview() {
     <div className="space-y-8">
       {/* Welcome Section */}
       <div>
-        <h1 className="text-4xl font-bold text-white mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+        <h1 className="text-4xl font-bold text-white mb-2" >
           {t('welcome')}, {user?.name}! 👋
         </h1>
         <p className="text-zinc-400">Készen állsz piacképes YouTube Shorts-okat készíteni?</p>
@@ -117,7 +117,7 @@ export default function DashboardOverview() {
       {/* Quick Actions */}
       <Card className="bg-zinc-900 border-zinc-800">
         <CardHeader>
-          <CardTitle className="text-white" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <CardTitle className="text-white" >
             Gyors Műveletek
           </CardTitle>
         </CardHeader>
@@ -147,7 +147,7 @@ export default function DashboardOverview() {
       {recentScripts.length > 0 && (
         <Card className="bg-zinc-900 border-zinc-800">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-white" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <CardTitle className="text-white" >
               Legutóbbi Scriptek
             </CardTitle>
             <Link to="/dashboard/scripts">
@@ -189,7 +189,7 @@ export default function DashboardOverview() {
       {/* Getting Started Guide */}
       <Card className="bg-gradient-to-br from-amber-400/10 to-amber-600/5 border-amber-400/20">
         <CardHeader>
-          <CardTitle className="text-amber-400" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <CardTitle className="text-amber-400" >
             🚀 Kezdd el a Munkát!
           </CardTitle>
         </CardHeader>

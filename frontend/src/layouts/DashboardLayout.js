@@ -68,7 +68,7 @@ export default function DashboardLayout() {
           {/* Logo */}
           <div className="p-6 border-b border-zinc-800">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-amber-400" style={{ fontFamily: 'Playfair Display, serif' }}>
+              <h1 className="text-2xl font-bold text-amber-400" >
                 LEGYENEZ
               </h1>
               <button
@@ -165,7 +165,7 @@ export default function DashboardLayout() {
             >
               <Menu size={24} />
             </button>
-            <h1 className="text-xl font-bold text-amber-400" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h1 className="text-xl font-bold text-amber-400" >
               LEGYENEZ
             </h1>
             <div className="w-6" /> {/* Spacer */}
