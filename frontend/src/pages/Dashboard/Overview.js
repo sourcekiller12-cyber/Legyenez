@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { useLanguage } from '../../contexts/LanguageContext';
 import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { FileText, Bookmark, TrendingUp, Play, ArrowRight } from 'lucide-react';
+import { Card, CardContent } from '../../components/ui/card';
+import { FileText, Bookmark, TrendingUp, Play, Sparkles, Upload, BarChart, Zap } from 'lucide-react';
 
 export default function DashboardOverview() {
   const { user, api } = useAuth();
-  const { t } = useLanguage();
   const [stats, setStats] = useState({
     total_scripts: 0,
     total_hooks: 0,
     avg_retention: 0,
-    total_videos: 0
+    avg_swipe_rate: 0
   });
-  const [recentScripts, setRecentScripts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,45 +21,25 @@ export default function DashboardOverview() {
 
   const fetchDashboardData = async () => {
     try {
-      // Fetch stats
-      const [scriptsRes, hooksRes, analyticsRes] = await Promise.all([
-        api.get('/scripts?limit=5'),
+      const [scriptsRes, hooksRes, analyticsRes, notionAnalyticsRes] = await Promise.all([
+        api.get('/scripts?limit=10'),
         api.get('/hooks?limit=10'),
-        api.get('/analytics/overview')
+        api.get('/analytics/overview'),
+        api.get('/notion-analytics/insights').catch(() => ({ data: { average_stats: null } }))
       ]);
 
       setStats({
         total_scripts: scriptsRes.data.length,
         total_hooks: hooksRes.data.length,
         avg_retention: analyticsRes.data.avg_retention || 0,
-        total_videos: analyticsRes.data.total_metrics || 0
+        avg_swipe_rate: notionAnalyticsRes.data?.average_stats?.avg_swipe_rate || 0
       });
-
-      setRecentScripts(scriptsRes.data.slice(0, 3));
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     } finally {
       setLoading(false);
     }
   };
-
-  const StatCard = ({ title, value, icon: Icon, color, link }) => (
-    <Link to={link}>
-      <Card className="bg-zinc-900 border-zinc-800 hover:border-amber-400/50 transition-all cursor-pointer">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-zinc-400 mb-1">{title}</p>
-              <h3 className="text-3xl font-bold text-white">{value}</h3>
-            </div>
-            <div className={`p-3 rounded-lg bg-${color}-400/10`}>
-              <Icon className={`text-${color}-400`} size={28} />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
-  );
 
   if (loading) {
     return (
@@ -73,143 +50,165 @@ export default function DashboardOverview() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-6xl mx-auto space-y-8">
       {/* Welcome Section */}
-      <div>
-        <h1 className="text-4xl font-bold text-white mb-2">
-          {t('welcome')}, {user?.name}! 👋
+      <div className="text-center space-y-2">
+        <h1 className="text-5xl font-bold text-white">
+          Üdv, {user?.name}! 👋
         </h1>
-        <p className="text-zinc-400">Készen állsz piacképes YouTube Shorts-okat készíteni?</p>
+        <p className="text-xl text-zinc-400">
+          Készen állsz piacképes YouTube Shorts-okat készíteni?
+        </p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          title={t('total_scripts')}
-          value={stats.total_scripts}
-          icon={FileText}
-          color="amber"
-          link="/dashboard/scripts"
-        />
-        <StatCard
-          title={t('total_hooks')}
-          value={stats.total_hooks}
-          icon={Bookmark}
-          color="blue"
-          link="/dashboard/hooks"
-        />
-        <StatCard
-          title={t('avg_retention')}
-          value={`${stats.avg_retention.toFixed(1)}%`}
-          icon={TrendingUp}
-          color="green"
-          link="/dashboard/analytics"
-        />
-        <StatCard
-          title="Videók"
-          value={stats.total_videos}
-          icon={Play}
-          color="purple"
-          link="/dashboard/videos"
-        />
+      {/* Stats Cards - 4 Column Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="bg-zinc-900/50 border-zinc-800 backdrop-blur">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-zinc-500 mb-1">Scriptek</p>
+                <p className="text-4xl font-bold text-white">{stats.total_scripts}</p>
+              </div>
+              <div className="p-3 bg-amber-400/10 rounded-xl">
+                <FileText className="text-amber-400" size={24} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-zinc-900/50 border-zinc-800 backdrop-blur">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-zinc-500 mb-1">Hookók</p>
+                <p className="text-4xl font-bold text-white">{stats.total_hooks}</p>
+              </div>
+              <div className="p-3 bg-blue-400/10 rounded-xl">
+                <Bookmark className="text-blue-400" size={24} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-zinc-900/50 border-zinc-800 backdrop-blur">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-zinc-500 mb-1">Retention %</p>
+                <p className="text-4xl font-bold text-white">{stats.avg_retention.toFixed(1)}%</p>
+              </div>
+              <div className="p-3 bg-green-400/10 rounded-xl">
+                <TrendingUp className="text-green-400" size={24} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-zinc-900/50 border-zinc-800 backdrop-blur">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-zinc-500 mb-1">Swipe Rate %</p>
+                <p className="text-4xl font-bold text-white">{stats.avg_swipe_rate.toFixed(1)}%</p>
+              </div>
+              <div className="p-3 bg-purple-400/10 rounded-xl">
+                <Zap className="text-purple-400" size={24} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Quick Actions */}
-      <Card className="bg-zinc-900 border-zinc-800">
-        <CardHeader>
-          <CardTitle className="text-white">
-            Gyors Műveletek
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link to="/dashboard/scripts">
-            <Button className="w-full bg-amber-400 hover:bg-amber-500 text-zinc-950 font-semibold">
-              <FileText size={20} className="mr-2" />
-              Új Script Generálás
-            </Button>
-          </Link>
-          <Link to="/dashboard/videos">
-            <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold">
-              <Play size={20} className="mr-2" />
-              Videó Készítés
-            </Button>
-          </Link>
-          <Link to="/dashboard/notion-analytics">
-            <Button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold">
-              <TrendingUp size={20} className="mr-2" />
-              Analytics Feltöltés
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
+      {/* Quick Actions - Large Buttons */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Link to="/dashboard/scripts" className="group">
+          <Card className="bg-gradient-to-br from-amber-400/10 to-amber-600/5 border-amber-400/20 hover:border-amber-400/50 transition-all cursor-pointer h-full">
+            <CardContent className="p-6 flex flex-col items-center text-center space-y-3">
+              <div className="p-4 bg-amber-400/10 rounded-full group-hover:scale-110 transition-transform">
+                <Sparkles className="text-amber-400" size={32} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-1">Script Generálás</h3>
+                <p className="text-sm text-zinc-400">AI-powered német faith scriptek</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
-      {/* Recent Scripts */}
-      {recentScripts.length > 0 && (
-        <Card className="bg-zinc-900 border-zinc-800">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-white">
-              Legutóbbi Scriptek
-            </CardTitle>
-            <Link to="/dashboard/scripts">
-              <Button variant="ghost" className="text-amber-400 hover:text-amber-300">
-                Összes megtekintése
-                <ArrowRight size={16} className="ml-2" />
-              </Button>
-            </Link>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {recentScripts.map((script) => (
-              <div
-                key={script.id}
-                className="p-4 bg-zinc-800 rounded-lg border border-zinc-700 hover:border-amber-400/50 transition-colors"
-              >
-                <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-semibold text-white">{script.topic}</h4>
-                  <span className="text-xs text-zinc-500">
-                    {new Date(script.created_at).toLocaleDateString('hu-HU')}
-                  </span>
+        <Link to="/dashboard/videos" className="group">
+          <Card className="bg-gradient-to-br from-blue-400/10 to-blue-600/5 border-blue-400/20 hover:border-blue-400/50 transition-all cursor-pointer h-full">
+            <CardContent className="p-6 flex flex-col items-center text-center space-y-3">
+              <div className="p-4 bg-blue-400/10 rounded-full group-hover:scale-110 transition-transform">
+                <Play className="text-blue-400" size={32} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-1">Videó Készítés</h3>
+                <p className="text-sm text-zinc-400">TTS + B-roll + karaoke</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link to="/dashboard/notion-analytics" className="group">
+          <Card className="bg-gradient-to-br from-green-400/10 to-green-600/5 border-green-400/20 hover:border-green-400/50 transition-all cursor-pointer h-full">
+            <CardContent className="p-6 flex flex-col items-center text-center space-y-3">
+              <div className="p-4 bg-green-400/10 rounded-full group-hover:scale-110 transition-transform">
+                <Upload className="text-green-400" size={32} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-1">Analytics Feltöltés</h3>
+                <p className="text-sm text-zinc-400">CSV import Notion-ből</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+
+      {/* Getting Started - Simplified */}
+      <Card className="bg-zinc-900/50 border-zinc-800">
+        <CardContent className="p-8">
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-amber-400/10 rounded-xl shrink-0">
+              <BarChart className="text-amber-400" size={28} />
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-xl font-semibold text-white mb-2">Hogyan kezdj neki?</h3>
+                <p className="text-zinc-400">Kövesd ezeket a lépéseket a sikeres YouTube Shorts készítéséhez</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="flex items-start space-x-3">
+                  <span className="flex items-center justify-center w-6 h-6 bg-amber-400/10 text-amber-400 rounded-full font-semibold text-xs shrink-0">1</span>
+                  <div>
+                    <p className="text-white font-medium">Generálj AI scripteket</p>
+                    <p className="text-zinc-500">Emotional faith-based tartalommal</p>
+                  </div>
                 </div>
-                <p className="text-sm text-zinc-400 line-clamp-2 mb-3">{script.script}</p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <span className="px-2 py-1 bg-amber-400/10 text-amber-400 text-xs rounded">
-                      {script.hook_type}
-                    </span>
-                    <span className="text-xs text-zinc-500">
-                      {script.character_count} karakter
-                    </span>
+                <div className="flex items-start space-x-3">
+                  <span className="flex items-center justify-center w-6 h-6 bg-amber-400/10 text-amber-400 rounded-full font-semibold text-xs shrink-0">2</span>
+                  <div>
+                    <p className="text-white font-medium">Töltsd fel analytics adatokat</p>
+                    <p className="text-zinc-500">CSV-ből vagy Notion API-val</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="flex items-center justify-center w-6 h-6 bg-amber-400/10 text-amber-400 rounded-full font-semibold text-xs shrink-0">3</span>
+                  <div>
+                    <p className="text-white font-medium">ML-optimalizált generálás</p>
+                    <p className="text-zinc-500">Top patterns alapján</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="flex items-center justify-center w-6 h-6 bg-amber-400/10 text-amber-400 rounded-full font-semibold text-xs shrink-0">4</span>
+                  <div>
+                    <p className="text-white font-medium">Készíts piacképes videót</p>
+                    <p className="text-zinc-500">Teljes video pipeline</p>
                   </div>
                 </div>
               </div>
-            ))}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Getting Started Guide */}
-      <Card className="bg-gradient-to-br from-amber-400/10 to-amber-600/5 border-amber-400/20">
-        <CardHeader>
-          <CardTitle className="text-amber-400">
-            🚀 Kezdd el a Munkát!
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 text-zinc-300">
-          <p className="flex items-start">
-            <span className="text-amber-400 mr-2">1.</span>
-            <span>Generálj emotional faith-based scripteket AI-val</span>
-          </p>
-          <p className="flex items-start">
-            <span className="text-amber-400 mr-2">2.</span>
-            <span>Töltsd fel Notion analytics adataidat CSV-ből</span>
-          </p>
-          <p className="flex items-start">
-            <span className="text-amber-400 mr-2">3.</span>
-            <span>Használd az ML-optimalizált script generálást a top patterns alapján</span>
-          </p>
-          <p className="flex items-start">
-            <span className="text-amber-400 mr-2">4.</span>
-            <span>Készíts piacképes videókat TTS + B-roll + karaoke feliratokkal</span>
-          </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
