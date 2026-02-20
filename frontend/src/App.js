@@ -47,7 +47,7 @@ function App() {
               <Route index element={<DashboardOverview />} />
               <Route path="scripts" element={<ScriptGenerator />} />
               <Route path="hooks" element={<HookLibrary />} />
-              <Route path="videos" element={<div className="text-white">Video Factory (Coming Soon)</div>} />
+              <Route path="videos" element={<VideoFactory />} />
               <Route path="analytics" element={<div className="text-white">Analytics (Coming Soon)</div>} />
               <Route path="notion-analytics" element={<NotionAnalytics />} />
               <Route path="settings" element={<div className="text-white">Settings (Coming Soon)</div>} />
