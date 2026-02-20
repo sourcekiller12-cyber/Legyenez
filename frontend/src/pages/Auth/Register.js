@@ -37,7 +37,7 @@ export default function Register() {
       <div className="w-full max-w-md">
         {/* Logo/Title */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-amber-400 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h1 className="text-5xl font-bold text-amber-400 mb-2" >
             LEGYENEZ
           </h1>
           <p className="text-zinc-400 text-sm">Short Video Factory</p>
@@ -45,7 +45,7 @@ export default function Register() {
 
         {/* Register Card */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 shadow-2xl">
-          <h2 className="text-2xl font-semibold text-white mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h2 className="text-2xl font-semibold text-white mb-6" >
             {t('register_title')}
           </h2>
 
