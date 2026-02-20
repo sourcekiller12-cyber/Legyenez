@@ -17,6 +17,7 @@ import ResetPassword from './pages/Auth/ResetPassword';
 // Dashboard Pages
 import DashboardOverview from './pages/Dashboard/Overview';
 import ScriptGenerator from './pages/Dashboard/ScriptGenerator';
+import NotionAnalytics from './pages/Dashboard/NotionAnalytics';
 
 import './App.css';
 
