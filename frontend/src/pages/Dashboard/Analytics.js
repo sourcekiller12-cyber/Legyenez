@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import {
@@ -15,6 +16,7 @@ import {
 
 export default function Analytics() {
   const { api } = useAuth();
+  const { t } = useLanguage();
   const [overview, setOverview] = useState(null);
   const [hookPerformance, setHookPerformance] = useState([]);
   const [timeSeries, setTimeSeries] = useState([]);
@@ -45,7 +47,7 @@ export default function Analytics() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-amber-400 text-lg">Betöltés...</div>
+        <div className="text-amber-400 text-lg">{t('loading')}</div>
       </div>
     );
   }
@@ -83,10 +85,10 @@ export default function Analytics() {
       {/* Header */}
       <div>
         <h1 className="text-4xl font-bold text-white mb-2">
-          Analytics Dashboard
+          {t('analytics')}
         </h1>
         <p className="text-zinc-400">
-          Performance metrikák és insights
+          {t('analytics_subtitle')}
         </p>
       </div>
 
@@ -94,25 +96,25 @@ export default function Analytics() {
       {overview && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
-            title="Összes Megtekintés"
+            title={t('total_views')}
             value={overview.total_views || 0}
             icon={Eye}
             color="blue"
           />
           <StatCard
-            title="Összes Like"
+            title={t('total_likes')}
             value={overview.total_likes || 0}
             icon={Heart}
             color="red"
           />
           <StatCard
-            title="Kommentek"
+            title={t('total_comments')}
             value={overview.total_comments || 0}
             icon={MessageCircle}
             color="green"
           />
           <StatCard
-            title="Új Feliratkozók"
+            title={t('new_subscribers')}
             value={overview.total_subs || 0}
             icon={UserPlus}
             color="purple"
@@ -127,7 +129,7 @@ export default function Analytics() {
             <CardHeader>
               <CardTitle className="text-green-400 flex items-center">
                 <Target size={20} className="mr-2" />
-                Átlag Retention Rate
+                {t('avg_retention_rate')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -142,12 +144,12 @@ export default function Analytics() {
                   <div className="flex items-center justify-center space-x-2">
                     {overview.avg_retention >= 60 ? (
                       <>
-                        <Badge className="bg-green-400/10 text-green-400">Kiváló</Badge>
+                        <Badge className="bg-green-400/10 text-green-400">{t('excellent')}</Badge>
                         <span className="text-xs text-zinc-500">60%+ = jó teljesítmény</span>
                       </>
                     ) : (
                       <>
-                        <Badge className="bg-yellow-400/10 text-yellow-400">Fejleszthető</Badge>
+                        <Badge className="bg-yellow-400/10 text-yellow-400">{t('improvable')}</Badge>
                         <span className="text-xs text-zinc-500">Cél: 60%+</span>
                       </>
                     )}
@@ -161,7 +163,7 @@ export default function Analytics() {
             <CardHeader>
               <CardTitle className="text-purple-400 flex items-center">
                 <Zap size={20} className="mr-2" />
-                Átlag Swipe Rate
+                {t('avg_swipe_rate')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -176,12 +178,12 @@ export default function Analytics() {
                   <div className="flex items-center justify-center space-x-2">
                     {overview.avg_swipe_rate >= 70 ? (
                       <>
-                        <Badge className="bg-purple-400/10 text-purple-400">Kiváló</Badge>
+                        <Badge className="bg-purple-400/10 text-purple-400">{t('excellent')}</Badge>
                         <span className="text-xs text-zinc-500">70%+ = erős hook</span>
                       </>
                     ) : (
                       <>
-                        <Badge className="bg-yellow-400/10 text-yellow-400">Fejleszthető</Badge>
+                        <Badge className="bg-yellow-400/10 text-yellow-400">{t('improvable')}</Badge>
                         <span className="text-xs text-zinc-500">Cél: 70%+</span>
                       </>
                     )}
@@ -197,7 +199,7 @@ export default function Analytics() {
       {hookPerformance.length > 0 && (
         <Card className="bg-zinc-900/50 border-zinc-800">
           <CardHeader>
-            <CardTitle className="text-white">Hook Típus Performance</CardTitle>
+            <CardTitle className="text-white">{t('hook_type_performance')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -212,7 +214,7 @@ export default function Analytics() {
                     </div>
                     <div className="flex items-center space-x-4">
                       <div>
-                        <p className="text-xs text-zinc-500">Retention</p>
+                        <p className="text-xs text-zinc-500">{t('retention')}</p>
                         <p className="text-sm font-semibold text-white">{item.avg_retention?.toFixed(1)}%</p>
                       </div>
                       <div>
@@ -238,7 +240,7 @@ export default function Analytics() {
       {timeSeries.length > 0 && (
         <Card className="bg-zinc-900/50 border-zinc-800">
           <CardHeader>
-            <CardTitle className="text-white">Legutóbbi Metrikák</CardTitle>
+            <CardTitle className="text-white">{t('latest_metrics')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -273,10 +275,10 @@ export default function Analytics() {
           <CardContent className="py-12 text-center">
             <TrendingUp className="mx-auto mb-4 text-zinc-600" size={64} />
             <h3 className="text-xl font-semibold text-white mb-2">
-              Még nincs analytics adat
+              {t('no_analytics_yet')}
             </h3>
             <p className="text-zinc-400">
-              Töltsd fel a Notion CSV-t vagy adj hozzá metrics-et
+              {t('upload_csv_or_add_metrics')}
             </p>
           </CardContent>
         </Card>
