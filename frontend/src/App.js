@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import { AuthProvider } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import LanguageSwitcher from './components/LanguageSwitcher';
 
 // Layouts
 import DashboardLayout from './layouts/DashboardLayout';
@@ -30,6 +31,7 @@ function App() {
     <AuthProvider>
       <LanguageProvider>
         <BrowserRouter>
+          <LanguageSwitcher />
           <Routes>
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />
@@ -50,9 +52,9 @@ function App() {
               <Route path="scripts" element={<ScriptGenerator />} />
               <Route path="hooks" element={<HookLibrary />} />
               <Route path="videos" element={<VideoFactory />} />
-              <Route path="analytics" element={<div className="text-white">Analytics (Coming Soon)</div>} />
+              <Route path="analytics" element={<Analytics />} />
               <Route path="notion-analytics" element={<NotionAnalytics />} />
-              <Route path="settings" element={<div className="text-white">Settings (Coming Soon)</div>} />
+              <Route path="settings" element={<Settings />} />
             </Route>
 
             {/* Redirect root to dashboard or login */}
