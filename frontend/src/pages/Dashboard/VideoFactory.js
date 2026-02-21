@@ -538,14 +538,26 @@ export default function VideoFactory() {
                     <Button
                       size="sm"
                       className="bg-green-500 hover:bg-green-600 text-white"
-                      onClick={() => {
-                        const downloadUrl = `${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/download`;
-                        const link = document.createElement('a');
-                        link.href = downloadUrl;
-                        link.download = `legyenez_${video.id.slice(0, 8)}.mp4`;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
+                      onClick={async () => {
+                        try {
+                          const response = await api.get(`/videos/${video.id}/download`, {
+                            responseType: 'blob'
+                          });
+                          
+                          // Create blob URL and trigger download
+                          const blob = new Blob([response.data], { type: 'video/mp4' });
+                          const url = window.URL.createObjectURL(blob);
+                          const link = document.createElement('a');
+                          link.href = url;
+                          link.download = `legyenez_${video.id.slice(0, 8)}.mp4`;
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                          window.URL.revokeObjectURL(url);
+                        } catch (error) {
+                          console.error('Download failed:', error);
+                          toast.error('Letöltés sikertelen');
+                        }
                       }}
                     >
                       <Download size={14} className="mr-1" />
