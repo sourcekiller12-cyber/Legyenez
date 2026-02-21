@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
 import { FileText, Bookmark, TrendingUp, Play, Sparkles, Upload, BarChart, Zap } from 'lucide-react';
 
 export default function DashboardOverview() {
   const { user, api } = useAuth();
+  const { t } = useLanguage();
   const [stats, setStats] = useState({
     total_scripts: 0,
     total_hooks: 0,
@@ -44,7 +46,7 @@ export default function DashboardOverview() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-amber-400 text-lg">Betöltés...</div>
+        <div className="text-amber-400 text-lg">{t('loading')}</div>
       </div>
     );
   }
@@ -54,10 +56,10 @@ export default function DashboardOverview() {
       {/* Welcome Section */}
       <div className="text-center space-y-2">
         <h1 className="text-5xl font-bold text-white">
-          Üdv, {user?.name}! 👋
+          {t('welcome')}, {user?.name}! 👋
         </h1>
         <p className="text-xl text-zinc-400">
-          Készen állsz piacképes YouTube Shorts-okat készíteni?
+          {t('welcome_message')}
         </p>
       </div>
 
@@ -67,7 +69,7 @@ export default function DashboardOverview() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-500 mb-1">Scriptek</p>
+                <p className="text-sm text-zinc-500 mb-1">{t('total_scripts')}</p>
                 <p className="text-4xl font-bold text-white">{stats.total_scripts}</p>
               </div>
               <div className="p-3 bg-amber-400/10 rounded-xl">
@@ -81,7 +83,7 @@ export default function DashboardOverview() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-500 mb-1">Hookok</p>
+                <p className="text-sm text-zinc-500 mb-1">{t('total_hooks')}</p>
                 <p className="text-4xl font-bold text-white">{stats.total_hooks}</p>
               </div>
               <div className="p-3 bg-blue-400/10 rounded-xl">
@@ -95,7 +97,7 @@ export default function DashboardOverview() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-500 mb-1">Retention %</p>
+                <p className="text-sm text-zinc-500 mb-1">{t('avg_retention')}</p>
                 <p className="text-4xl font-bold text-white">{stats.avg_retention.toFixed(1)}%</p>
               </div>
               <div className="p-3 bg-green-400/10 rounded-xl">
@@ -109,7 +111,7 @@ export default function DashboardOverview() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-500 mb-1">Swipe Rate %</p>
+                <p className="text-sm text-zinc-500 mb-1">{t('swipe_rate')}</p>
                 <p className="text-4xl font-bold text-white">{stats.avg_swipe_rate.toFixed(1)}%</p>
               </div>
               <div className="p-3 bg-purple-400/10 rounded-xl">
@@ -129,8 +131,8 @@ export default function DashboardOverview() {
                 <Sparkles className="text-amber-400" size={32} />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-1">Script Generálás</h3>
-                <p className="text-sm text-zinc-400">AI-powered német faith scriptek</p>
+                <h3 className="text-lg font-semibold text-white mb-1">{t('script_generation')}</h3>
+                <p className="text-sm text-zinc-400">{t('script_generation_desc')}</p>
               </div>
             </CardContent>
           </Card>
@@ -143,12 +145,74 @@ export default function DashboardOverview() {
                 <Play className="text-blue-400" size={32} />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-1">Videó Készítés</h3>
-                <p className="text-sm text-zinc-400">TTS + B-roll + karaoke</p>
+                <h3 className="text-lg font-semibold text-white mb-1">{t('video_creation')}</h3>
+                <p className="text-sm text-zinc-400">{t('video_creation_desc')}</p>
               </div>
             </CardContent>
           </Card>
         </Link>
+
+        <Link to="/dashboard/notion-analytics" className="group">
+          <Card className="bg-gradient-to-br from-green-400/10 to-green-600/5 border-green-400/20 hover:border-green-400/50 transition-all cursor-pointer h-full">
+            <CardContent className="p-6 flex flex-col items-center text-center space-y-3">
+              <div className="p-4 bg-green-400/10 rounded-full group-hover:scale-110 transition-transform">
+                <Upload className="text-green-400" size={32} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-1">{t('analytics_upload')}</h3>
+                <p className="text-sm text-zinc-400">{t('analytics_upload_desc')}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+
+      {/* How to Start - Process Steps */}
+      <Card className="bg-zinc-900/30 border-zinc-800">
+        <CardContent className="p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-white mb-2">{t('how_to_start')}</h2>
+            <p className="text-zinc-400">{t('how_to_start_desc')}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="text-center space-y-3">
+              <div className="w-12 h-12 mx-auto bg-amber-400 rounded-full flex items-center justify-center text-zinc-950 font-bold text-xl">
+                1
+              </div>
+              <h3 className="font-semibold text-white">{t('step_1_title')}</h3>
+              <p className="text-sm text-zinc-500">{t('step_1_desc')}</p>
+            </div>
+
+            <div className="text-center space-y-3">
+              <div className="w-12 h-12 mx-auto bg-blue-400 rounded-full flex items-center justify-center text-zinc-950 font-bold text-xl">
+                2
+              </div>
+              <h3 className="font-semibold text-white">{t('step_2_title')}</h3>
+              <p className="text-sm text-zinc-500">{t('step_2_desc')}</p>
+            </div>
+
+            <div className="text-center space-y-3">
+              <div className="w-12 h-12 mx-auto bg-green-400 rounded-full flex items-center justify-center text-zinc-950 font-bold text-xl">
+                3
+              </div>
+              <h3 className="font-semibold text-white">{t('step_3_title')}</h3>
+              <p className="text-sm text-zinc-500">{t('step_3_desc')}</p>
+            </div>
+
+            <div className="text-center space-y-3">
+              <div className="w-12 h-12 mx-auto bg-purple-400 rounded-full flex items-center justify-center text-zinc-950 font-bold text-xl">
+                4
+              </div>
+              <h3 className="font-semibold text-white">{t('step_4_title')}</h3>
+              <p className="text-sm text-zinc-500">{t('step_4_desc')}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
         <Link to="/dashboard/notion-analytics" className="group">
           <Card className="bg-gradient-to-br from-green-400/10 to-green-600/5 border-green-400/20 hover:border-green-400/50 transition-all cursor-pointer h-full">
