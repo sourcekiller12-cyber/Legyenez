@@ -37,13 +37,25 @@ export default function VideoFactory() {
   const [generating, setGenerating] = useState(false);
 
   // Voice Settings
-  const [voiceId, setVoiceId] = useState('');
+  const [voiceOption, setVoiceOption] = useState('default'); // 'default' or 'custom'
+  const [voiceId, setVoiceId] = useState('BsX9EcVskRzn0UFZ9dmh'); // Default voice
+  const [customVoiceId, setCustomVoiceId] = useState('');
   const [voiceSettings, setVoiceSettings] = useState({
     stability: 0.7,
     similarity_boost: 0.75,
     style: 0.5,
     use_speaker_boost: true
   });
+
+  // Popular ElevenLabs voices
+  const popularVoices = [
+    { id: 'BsX9EcVskRzn0UFZ9dmh', name: 'Alapértelmezett (Saját hang)', language: 'Multilingual' },
+    { id: '21m00Tcm4TlvDq8ikWAM', name: 'Rachel (Female)', language: 'English' },
+    { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam (Male)', language: 'English' },
+    { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella (Female)', language: 'English' },
+    { id: 'ErXwobaYiN019PkySvjV', name: 'Antoni (Male)', language: 'English' },
+    { id: 'VR6AewLTigWG4xSOukaG', name: 'Arnold (Male)', language: 'English' },
+  ];
 
   // Video Settings
   const [brollSearch, setBrollSearch] = useState('');
