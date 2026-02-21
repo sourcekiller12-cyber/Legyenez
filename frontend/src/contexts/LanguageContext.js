@@ -841,7 +841,7 @@ export const LanguageProvider = ({ children }) => {
   }, [language]);
 
   const t = (key) => {
-    // US uses the same translations as EN
+    // Map 'us' to 'en' for backwards compatibility
     const langCode = language === 'us' ? 'en' : language;
     return translations[langCode]?.[key] || translations['hu'][key] || key;
   };
