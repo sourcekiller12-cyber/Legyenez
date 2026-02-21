@@ -538,7 +538,15 @@ export default function VideoFactory() {
                     <Button
                       size="sm"
                       className="bg-green-500 hover:bg-green-600 text-white"
-                      onClick={() => window.open(video.video_url, '_blank')}
+                      onClick={() => {
+                        const downloadUrl = `${process.env.REACT_APP_BACKEND_URL}/api/videos/${video.id}/download`;
+                        const link = document.createElement('a');
+                        link.href = downloadUrl;
+                        link.download = `legyenez_${video.id.slice(0, 8)}.mp4`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                      }}
                     >
                       <Download size={14} className="mr-1" />
                       Letöltés
