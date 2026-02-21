@@ -120,10 +120,9 @@ class FFmpegService:
     ):
         """
         Create ASS subtitle file with karaoke effect.
-        White text → lemon yellow for active word.
-        Positioned in safe zone (avoiding YouTube UI).
+        Multiple words per line (3-5 words), proper sizing and yellow highlight.
         """
-        # ASS header
+        # ASS header with smaller font and proper colors
         ass_content = """[Script Info]
 Title: Karaoke Subtitles
 ScriptType: v4.00+
@@ -133,42 +132,75 @@ YCbCr Matrix: None
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,Arial,60,&H00FFFFFF,&H00FFFF00,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,3,2,2,10,10,120,1
+Style: Default,Arial Black,36,&H00FFFFFF,&H0000FFFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,3,2,2,10,10,150,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
         
-        # If no word timestamps, create simple subtitles
+        # Group words into lines of 3-5 words
+        words = script_text.split()
+        if not words:
+            return
+        
+        # Create word groups (3-5 words per line)
+        word_groups = []
+        current_group = []
+        for word in words:
+            current_group.append(word)
+            if len(current_group) >= 4 or (len(current_group) >= 3 and len(word) > 8):
+                word_groups.append(' '.join(current_group))
+                current_group = []
+        if current_group:
+            word_groups.append(' '.join(current_group))
+        
+        # Calculate timing for each group
         if not word_timestamps or len(word_timestamps) == 0:
-            # Split text into words
-            words = script_text.split()
-            avg_word_duration = duration / len(words) if words else 1.0
+            # Simple time division
+            group_duration = duration / len(word_groups) if word_groups else 1.0
             
             current_time = 0.0
-            for word in words:
+            for group in word_groups:
                 start_time = FFmpegService.format_ass_time(current_time)
-                current_time += avg_word_duration
+                current_time += group_duration
                 end_time = FFmpegService.format_ass_time(current_time)
                 
-                ass_content += f"Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{{\\k{int(avg_word_duration * 100)}}}{word}\n"
+                # Create karaoke effect for each word in the group
+                group_words = group.split()
+                word_duration = (group_duration / len(group_words)) * 100 if group_words else 100
+                
+                karaoke_text = ''.join([f"{{\\k{int(word_duration)}}}{w} " for w in group_words])
+                ass_content += f"Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{karaoke_text}\n"
         else:
-            # Use word timestamps from ElevenLabs
+            # Use timestamps - group words based on timing
+            words_with_time = []
             for i, char_data in enumerate(word_timestamps):
                 if isinstance(char_data, dict) and 'character' in char_data and 'start_time_ms' in char_data:
-                    char = char_data['character']
-                    start_ms = char_data['start_time_ms']
+                    words_with_time.append({
+                        'word': char_data['character'],
+                        'start_ms': char_data['start_time_ms'],
+                        'end_ms': word_timestamps[i+1]['start_time_ms'] if i < len(word_timestamps) - 1 else duration * 1000
+                    })
+            
+            # Group into lines
+            if words_with_time:
+                i = 0
+                while i < len(words_with_time):
+                    # Take 3-5 words
+                    group_size = min(4, len(words_with_time) - i)
+                    group = words_with_time[i:i+group_size]
                     
-                    # Find end time (next character or duration)
-                    end_ms = duration * 1000
-                    if i < len(word_timestamps) - 1 and isinstance(word_timestamps[i+1], dict) and 'start_time_ms' in word_timestamps[i+1]:
-                        end_ms = word_timestamps[i+1]['start_time_ms']
+                    start_time = FFmpegService.format_ass_time(group[0]['start_ms'] / 1000.0)
+                    end_time = FFmpegService.format_ass_time(group[-1]['end_ms'] / 1000.0)
                     
-                    start_time = FFmpegService.format_ass_time(start_ms / 1000.0)
-                    end_time = FFmpegService.format_ass_time(end_ms / 1000.0)
-                    karaoke_duration = int((end_ms - start_ms) / 10)
+                    # Create karaoke text
+                    karaoke_text = ''
+                    for word_data in group:
+                        duration_ms = word_data['end_ms'] - word_data['start_ms']
+                        karaoke_text += f"{{\\k{int(duration_ms / 10)}}}{word_data['word']} "
                     
-                    ass_content += f"Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{{\\k{karaoke_duration}}}{char}\n"
+                    ass_content += f"Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{karaoke_text}\n"
+                    i += group_size
         
         # Write ASS file
         with open(output_path, 'w', encoding='utf-8') as f:
