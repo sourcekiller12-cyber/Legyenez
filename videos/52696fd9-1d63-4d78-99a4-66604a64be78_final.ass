@@ -1,0 +1,59 @@
+[Script Info]
+Title: Karaoke Subtitles
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+YCbCr Matrix: None
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial,60,&H00FFFFFF,&H00FFFF00,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,3,2,2,10,10,120,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.39,Default,,0,0,0,,{\k39}Hast
+Dialogue: 0,0:00:00.39,0:00:00.79,Default,,0,0,0,,{\k40}du
+Dialogue: 0,0:00:00.79,0:00:01.19,Default,,0,0,0,,{\k40}schon
+Dialogue: 0,0:00:01.19,0:00:01.59,Default,,0,0,0,,{\k40}einmal
+Dialogue: 0,0:00:01.59,0:00:01.99,Default,,0,0,0,,{\k39}in
+Dialogue: 0,0:00:01.99,0:00:02.39,Default,,0,0,0,,{\k40}der
+Dialogue: 0,0:00:02.39,0:00:02.79,Default,,0,0,0,,{\k40}Dunkelheit
+Dialogue: 0,0:00:02.79,0:00:03.19,Default,,0,0,0,,{\k40}gestanden,
+Dialogue: 0,0:00:03.19,0:00:03.59,Default,,0,0,0,,{\k40}wo
+Dialogue: 0,0:00:03.59,0:00:03.99,Default,,0,0,0,,{\k39}der
+Dialogue: 0,0:00:03.99,0:00:04.39,Default,,0,0,0,,{\k40}Ausweg
+Dialogue: 0,0:00:04.39,0:00:04.79,Default,,0,0,0,,{\k40}verborgen
+Dialogue: 0,0:00:04.79,0:00:05.19,Default,,0,0,0,,{\k40}scheint?
+Dialogue: 0,0:00:05.19,0:00:05.59,Default,,0,0,0,,{\k40}Doch
+Dialogue: 0,0:00:05.59,0:00:05.99,Default,,0,0,0,,{\k39}selbst
+Dialogue: 0,0:00:05.99,0:00:06.39,Default,,0,0,0,,{\k40}im
+Dialogue: 0,0:00:06.39,0:00:06.79,Default,,0,0,0,,{\k40}tiefsten
+Dialogue: 0,0:00:06.79,0:00:07.19,Default,,0,0,0,,{\k40}Schatten
+Dialogue: 0,0:00:07.19,0:00:07.59,Default,,0,0,0,,{\k39}blüht
+Dialogue: 0,0:00:07.59,0:00:07.99,Default,,0,0,0,,{\k40}die
+Dialogue: 0,0:00:07.99,0:00:08.39,Default,,0,0,0,,{\k40}Hoffnung.
+Dialogue: 0,0:00:08.39,0:00:08.79,Default,,0,0,0,,{\k40}Glaube
+Dialogue: 0,0:00:08.79,0:00:09.19,Default,,0,0,0,,{\k40}daran,
+Dialogue: 0,0:00:09.19,0:00:09.59,Default,,0,0,0,,{\k39}dass
+Dialogue: 0,0:00:09.59,0:00:09.99,Default,,0,0,0,,{\k40}jeder
+Dialogue: 0,0:00:09.99,0:00:10.39,Default,,0,0,0,,{\k40}Schritt,
+Dialogue: 0,0:00:10.39,0:00:10.79,Default,,0,0,0,,{\k40}den
+Dialogue: 0,0:00:10.79,0:00:11.19,Default,,0,0,0,,{\k40}du
+Dialogue: 0,0:00:11.19,0:00:11.59,Default,,0,0,0,,{\k39}machst,
+Dialogue: 0,0:00:11.59,0:00:11.99,Default,,0,0,0,,{\k40}dich
+Dialogue: 0,0:00:11.99,0:00:12.39,Default,,0,0,0,,{\k40}näher
+Dialogue: 0,0:00:12.39,0:00:12.79,Default,,0,0,0,,{\k40}zur
+Dialogue: 0,0:00:12.79,0:00:13.19,Default,,0,0,0,,{\k39}Lichtquelle
+Dialogue: 0,0:00:13.19,0:00:13.59,Default,,0,0,0,,{\k40}führt.
+Dialogue: 0,0:00:13.59,0:00:13.99,Default,,0,0,0,,{\k40}Du
+Dialogue: 0,0:00:13.99,0:00:14.39,Default,,0,0,0,,{\k40}bist
+Dialogue: 0,0:00:14.39,0:00:14.79,Default,,0,0,0,,{\k40}nicht
+Dialogue: 0,0:00:14.79,0:00:15.19,Default,,0,0,0,,{\k39}allein.
+Dialogue: 0,0:00:15.19,0:00:15.59,Default,,0,0,0,,{\k40}Diese
+Dialogue: 0,0:00:15.59,0:00:15.99,Default,,0,0,0,,{\k40}inneren
+Dialogue: 0,0:00:15.99,0:00:16.39,Default,,0,0,0,,{\k40}Kämpfe
+Dialogue: 0,0:00:16.39,0:00:16.79,Default,,0,0,0,,{\k40}formen
+Dialogue: 0,0:00:16.79,0:00:17.19,Default,,0,0,0,,{\k39}dich,
+Dialogue: 0,0:00:17.19,0:00:17.58,Default,,0,0,0,,{\k40}machen
+Dialogue: 0,0:00:17.58,0:00:17.98,Default,,0,0,0,,{\k40}dich
+Dialogue: 0,0:00:17.98,0:00:18.39,Default,,0,0,0,,{\k40}stärker.
