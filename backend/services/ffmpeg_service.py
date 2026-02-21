@@ -151,7 +151,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 current_time += avg_word_duration
                 end_time = FFmpegService.format_ass_time(current_time)
                 
-                ass_content += f"Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{{\\k{int(avg_word_duration * 100)}}}{word} "
+                ass_content += f"Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{{\\k{int(avg_word_duration * 100)}}}{word}\n"
         else:
             # Use word timestamps from ElevenLabs
             for i, char_data in enumerate(word_timestamps):
@@ -168,7 +168,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     end_time = FFmpegService.format_ass_time(end_ms / 1000.0)
                     karaoke_duration = int((end_ms - start_ms) / 10)
                     
-                    ass_content += f"Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{{\\k{karaoke_duration}}}{char} "
+                    ass_content += f"Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{{\\k{karaoke_duration}}}{char}\n"
         
         # Write ASS file
         with open(output_path, 'w', encoding='utf-8') as f:
