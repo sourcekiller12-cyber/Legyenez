@@ -18,7 +18,7 @@ import {
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
-  const { t, language, setLanguage } = useLanguage();
+  const { t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -29,7 +29,7 @@ export default function DashboardLayout() {
     { name: t('nav_hooks'), href: '/dashboard/hooks', icon: Bookmark },
     { name: t('nav_videos'), href: '/dashboard/videos', icon: Video },
     { name: t('nav_analytics'), href: '/dashboard/analytics', icon: BarChart3 },
-    { name: 'Notion Analytics', href: '/dashboard/notion-analytics', icon: Database },
+    { name: t('nav_notion'), href: '/dashboard/notion-analytics', icon: Database },
     { name: t('nav_settings'), href: '/dashboard/settings', icon: Settings },
   ];
 
@@ -118,27 +118,6 @@ export default function DashboardLayout() {
               );
             })}
           </nav>
-
-          {/* Language Selector */}
-          <div className="p-4 border-t border-zinc-800">
-            <div className="flex items-center space-x-2">
-              {['hu', 'de', 'en', 'pl', 'nl'].map((lang) => (
-                <button
-                  key={lang}
-                  onClick={() => setLanguage(lang)}
-                  className={`
-                    px-2 py-1 text-xs rounded transition-colors
-                    ${language === lang
-                      ? 'bg-amber-400 text-zinc-950 font-medium'
-                      : 'bg-zinc-800 text-zinc-400 hover:text-white'
-                    }
-                  `}
-                >
-                  {lang.toUpperCase()}
-                </button>
-              ))}
-            </div>
-          </div>
 
           {/* Logout */}
           <div className="p-4 border-t border-zinc-800">
