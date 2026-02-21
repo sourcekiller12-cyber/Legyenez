@@ -55,17 +55,17 @@ export default function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1.5 w-36 bg-zinc-900/95 border border-zinc-700 rounded-lg shadow-2xl overflow-hidden backdrop-blur-sm">
+        <div className="absolute right-0 mt-1.5 w-32 bg-zinc-900/95 border border-zinc-700 rounded-lg shadow-2xl overflow-hidden backdrop-blur-sm">
           {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
-              className={`w-full flex items-center space-x-2.5 px-3 py-2 hover:bg-zinc-800 transition-colors ${
+              className={`w-full flex items-center space-x-2 px-3 py-2 hover:bg-zinc-800 transition-colors ${
                 language === lang.code ? 'bg-amber-400/10' : ''
               }`}
             >
               <span className="text-base">{lang.flag}</span>
-              <span className={`text-xs font-medium tracking-wide ${
+              <span className={`text-xs font-medium ${
                 language === lang.code ? 'text-amber-400' : 'text-zinc-300'
               }`}>
                 {lang.code.toUpperCase()}
