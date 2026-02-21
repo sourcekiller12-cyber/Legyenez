@@ -245,18 +245,67 @@ export default function VideoFactory() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Voice Selection */}
               <div>
-                <Label className="text-zinc-300">Voice ID</Label>
-                <Input
-                  placeholder="pl. CBPNfSFlxFnoBab9ZbDZ"
-                  value={voiceId}
-                  onChange={(e) => setVoiceId(e.target.value)}
-                  className="bg-zinc-800 border-zinc-700 text-white mt-1"
-                />
-                <p className="text-xs text-zinc-500 mt-1">
-                  Saját ElevenLabs voice ID a hangodhoz
-                </p>
+                <Label className="text-zinc-300">Voice Kiválasztás</Label>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <button
+                    onClick={() => setVoiceOption('default')}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      voiceOption === 'default'
+                        ? 'bg-amber-400 text-zinc-950'
+                        : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                    }`}
+                  >
+                    Népszerű Voice-ok
+                  </button>
+                  <button
+                    onClick={() => setVoiceOption('custom')}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      voiceOption === 'custom'
+                        ? 'bg-amber-400 text-zinc-950'
+                        : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                    }`}
+                  >
+                    Saját Voice ID
+                  </button>
+                </div>
               </div>
+
+              {/* Popular Voices Dropdown */}
+              {voiceOption === 'default' && (
+                <div>
+                  <Label className="text-zinc-300">Válassz Voice-t</Label>
+                  <Select value={voiceId} onValueChange={setVoiceId}>
+                    <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white mt-1">
+                      <SelectValue placeholder="Válassz hangot..." />
+                    </SelectTrigger>
+                    <SelectContent className="bg-zinc-800 border-zinc-700">
+                      {popularVoices.map(voice => (
+                        <SelectItem key={voice.id} value={voice.id}>
+                          {voice.name} - {voice.language}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Custom Voice ID Input */}
+              {voiceOption === 'custom' && (
+                <div>
+                  <Label className="text-zinc-300">Custom Voice ID</Label>
+                  <Input
+                    placeholder="pl. CBPNfSFlxFnoBab9ZbDZ"
+                    value={customVoiceId}
+                    onChange={(e) => setCustomVoiceId(e.target.value)}
+                    className="bg-zinc-800 border-zinc-700 text-white mt-1"
+                  />
+                  <p className="text-xs text-zinc-500 mt-1">
+                    Add meg a saját ElevenLabs Voice ID-det
+                  </p>
+                </div>
+              )}
 
               <div>
                 <div className="flex items-center justify-between mb-2">
