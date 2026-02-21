@@ -126,13 +126,14 @@ class VideoGenerationService:
                 use_speaker_boost=voice_settings.get("use_speaker_boost", True) if voice_settings else True
             )
             
-            # Generate audio with alignment (word timestamps)
-            response = self.eleven_client.text_to_speech.convert_with_timestamps(
+            # Generate audio WITHOUT timestamps for now (timestamps API seems broken)
+            logger.info("Generating TTS audio...")
+            response = self.eleven_client.text_to_speech.convert(
                 text=text,
                 voice_id=self.elevenlabs_voice_id,
                 model_id="eleven_multilingual_v2",
                 voice_settings=settings,
-                output_format="mp3_44100_128"  # Explicit format
+                output_format="mp3_44100_128"
             )
             
             # Save audio as MP3 first
@@ -140,19 +141,14 @@ class VideoGenerationService:
             audio_path = self.output_dir / f"{video_id}_audio.wav"
             
             audio_data = b""
-            word_timestamps = []
-            
             for chunk in response:
-                if hasattr(chunk, 'audio'):
-                    audio_data += chunk.audio
-                if hasattr(chunk, 'alignment'):
-                    word_timestamps = chunk.alignment.characters or []
+                audio_data += chunk
             
             # Write MP3
             with open(audio_path_mp3, 'wb') as f:
                 f.write(audio_data)
             
-            logger.info(f"Generated TTS audio (MP3): {audio_path_mp3}")
+            logger.info(f"Generated TTS audio (MP3): {audio_path_mp3}, size: {len(audio_data)} bytes")
             
             # Convert MP3 to WAV using FFmpeg for better compatibility
             ffmpeg_cmd = [
@@ -175,11 +171,44 @@ class VideoGenerationService:
                 audio_path_mp3.unlink()
                 logger.info(f"Converted to WAV: {audio_path}")
             
+            # Generate simple word timestamps based on text length
+            # (Since ElevenLabs timestamps API is not working)
+            words = text.split()
+            audio_duration = self._get_audio_duration(audio_path)
+            word_duration = audio_duration / len(words) if words else 1.0
+            
+            word_timestamps = []
+            for i, word in enumerate(words):
+                start_time_ms = int(i * word_duration * 1000)
+                word_timestamps.append({
+                    'character': word,
+                    'start_time_ms': start_time_ms
+                })
+            
             return audio_path, word_timestamps
         
         except Exception as e:
             logger.error(f"Error generating TTS: {str(e)}")
             raise
+    
+    def _get_audio_duration(self, audio_path: Path) -> float:
+        """Get audio duration using FFprobe"""
+        import subprocess
+        import json
+        
+        cmd = [
+            'ffprobe',
+            '-v', 'quiet',
+            '-print_format', 'json',
+            '-show_format',
+            str(audio_path)
+        ]
+        
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode == 0:
+            data = json.loads(result.stdout)
+            return float(data['format']['duration'])
+        return 30.0  # Default
     
     async def get_audio_duration(self, audio_path: Path) -> float:
         """
