@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -9,6 +10,7 @@ import { Save, Key, User, LogOut, Eye, EyeOff } from 'lucide-react';
 
 export default function Settings() {
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const [apiKeys, setApiKeys] = useState({
     openai: '',
     elevenlabs: '',
@@ -31,7 +33,7 @@ export default function Settings() {
 
   const handleSaveKeys = () => {
     localStorage.setItem('api_keys', JSON.stringify(apiKeys));
-    toast.success('API kulcsok mentve!');
+    toast.success(t('keys_saved'));
   };
 
   const toggleShowKey = (key) => {
@@ -43,10 +45,10 @@ export default function Settings() {
       {/* Header */}
       <div>
         <h1 className="text-4xl font-bold text-white mb-2">
-          Beállítások
+          {t('settings_title')}
         </h1>
         <p className="text-zinc-400">
-          Profil és API kulcsok kezelése
+          {t('settings_subtitle')}
         </p>
       </div>
 
@@ -55,7 +57,7 @@ export default function Settings() {
         <CardHeader>
           <CardTitle className="text-white flex items-center">
             <User size={20} className="mr-2" />
-            Profil
+            {t('profile')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -67,7 +69,7 @@ export default function Settings() {
               <h3 className="text-xl font-semibold text-white">{user?.name}</h3>
               <p className="text-zinc-400">{user?.email}</p>
               <p className="text-xs text-zinc-500 mt-1">
-                Csatlakozás: {new Date(user?.created_at).toLocaleDateString('hu-HU')}
+                {t('created_at')}: {new Date(user?.created_at).toLocaleDateString('hu-HU')}
               </p>
             </div>
           </div>
@@ -79,10 +81,10 @@ export default function Settings() {
         <CardHeader>
           <CardTitle className="text-white flex items-center">
             <Key size={20} className="mr-2" />
-            API Kulcsok
+            {t('api_keys')}
           </CardTitle>
           <p className="text-sm text-amber-400 mt-2">
-            ⚠️ Figyelem: A kulcsok a böngésző localStorage-ban tárolódnak!
+            {t('api_keys_warning')}
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -163,7 +165,7 @@ export default function Settings() {
             className="w-full bg-amber-400 hover:bg-amber-500 text-zinc-950 font-semibold"
           >
             <Save size={16} className="mr-2" />
-            Kulcsok Mentése
+            {t('save_keys')}
           </Button>
 
           <p className="text-xs text-zinc-500 text-center">
@@ -177,21 +179,21 @@ export default function Settings() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-white mb-1">Kijelentkezés</h3>
+              <h3 className="font-semibold text-white mb-1">{t('logout')}</h3>
               <p className="text-sm text-zinc-400">
-                Munkamenet befejezése
+                {t('logout_subtitle')}
               </p>
             </div>
             <Button
               onClick={() => {
                 logout();
-                toast.success('Sikeresen kijelentkeztél!');
+                toast.success(t('logout_success'));
               }}
               variant="destructive"
               className="bg-red-500 hover:bg-red-600"
             >
               <LogOut size={16} className="mr-2" />
-              Kijelentkezés
+              {t('logout')}
             </Button>
           </div>
         </CardContent>
