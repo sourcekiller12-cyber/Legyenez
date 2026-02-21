@@ -116,6 +116,8 @@ class VideoGenerationService:
         """
         Generate TTS audio using ElevenLabs with word-level timestamps.
         """
+        import subprocess
+        
         try:
             settings = VoiceSettings(
                 stability=voice_settings.get("stability", 0.7) if voice_settings else 0.7,
@@ -129,11 +131,13 @@ class VideoGenerationService:
                 text=text,
                 voice_id=self.elevenlabs_voice_id,
                 model_id="eleven_multilingual_v2",
-                voice_settings=settings
+                voice_settings=settings,
+                output_format="mp3_44100_128"  # Explicit format
             )
             
-            # Save audio
-            audio_path = self.output_dir / f"{video_id}_audio.mp3"
+            # Save audio as MP3 first
+            audio_path_mp3 = self.output_dir / f"{video_id}_audio_temp.mp3"
+            audio_path = self.output_dir / f"{video_id}_audio.wav"
             
             audio_data = b""
             word_timestamps = []
@@ -144,10 +148,33 @@ class VideoGenerationService:
                 if hasattr(chunk, 'alignment'):
                     word_timestamps = chunk.alignment.characters or []
             
-            with open(audio_path, 'wb') as f:
+            # Write MP3
+            with open(audio_path_mp3, 'wb') as f:
                 f.write(audio_data)
             
-            logger.info(f"Generated TTS audio: {audio_path}")
+            logger.info(f"Generated TTS audio (MP3): {audio_path_mp3}")
+            
+            # Convert MP3 to WAV using FFmpeg for better compatibility
+            ffmpeg_cmd = [
+                'ffmpeg',
+                '-i', str(audio_path_mp3),
+                '-acodec', 'pcm_s16le',
+                '-ar', '44100',
+                '-ac', '2',
+                '-y',
+                str(audio_path)
+            ]
+            
+            result = subprocess.run(ffmpeg_cmd, capture_output=True, text=True)
+            if result.returncode != 0:
+                logger.error(f"FFmpeg conversion failed: {result.stderr}")
+                # If conversion fails, use MP3 directly
+                audio_path = audio_path_mp3
+            else:
+                # Remove temp MP3
+                audio_path_mp3.unlink()
+                logger.info(f"Converted to WAV: {audio_path}")
+            
             return audio_path, word_timestamps
         
         except Exception as e:
