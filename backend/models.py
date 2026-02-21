@@ -119,4 +119,23 @@ class Video(BaseModel):
     duration: Optional[float] = None
     error: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+# ===== SAVED VOICE MODELS =====
+class SavedVoice(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    voice_id: str
+    name: str
+    language: Optional[str] = "Multilingual"
+    is_favorite: bool = False
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class SavedVoiceCreate(BaseModel):
+    voice_id: str
+    name: str
+    language: Optional[str] = "Multilingual"
+    is_favorite: bool = False
+
     completed_at: Optional[datetime] = None
