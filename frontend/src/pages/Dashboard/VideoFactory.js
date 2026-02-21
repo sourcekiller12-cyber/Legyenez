@@ -44,6 +44,7 @@ export default function VideoFactory() {
     stability: 0.7,
     similarity_boost: 0.75,
     style: 0.5,
+    speed: 1.0,
     use_speaker_boost: true
   });
 
