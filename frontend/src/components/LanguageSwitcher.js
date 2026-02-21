@@ -38,13 +38,12 @@ export default function LanguageSwitcher() {
     <div className="fixed top-4 right-4 z-50" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg transition-all duration-200 hover:shadow-amber-400/10"
+        className="flex items-center space-x-1.5 px-2.5 py-1.5 bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg transition-all duration-200 hover:border-amber-400/50 backdrop-blur-sm"
       >
-        <Globe className="text-amber-400" size={16} />
-        <span className="text-xl">{currentLanguage?.flag}</span>
-        <span className="text-white text-sm font-medium">{currentLanguage?.code.toUpperCase()}</span>
+        <span className="text-base">{currentLanguage?.flag}</span>
+        <span className="text-white text-xs font-semibold tracking-wide">{currentLanguage?.code.toUpperCase()}</span>
         <svg
-          className={`w-3 h-3 text-zinc-400 transition-transform duration-200 ${
+          className={`w-3 h-3 text-zinc-500 transition-transform duration-200 ${
             isOpen ? 'rotate-180' : ''
           }`}
           fill="none"
@@ -56,22 +55,24 @@ export default function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-44 bg-zinc-900 border border-zinc-700 rounded-lg shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute right-0 mt-1.5 w-36 bg-zinc-900/95 border border-zinc-700 rounded-lg shadow-2xl overflow-hidden backdrop-blur-sm">
           {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
-              className={`w-full flex items-center space-x-3 px-3 py-2.5 hover:bg-zinc-800 transition-colors ${
-                language === lang.code ? 'bg-amber-400/10 border-l-2 border-amber-400' : ''
+              className={`w-full flex items-center space-x-2.5 px-3 py-2 hover:bg-zinc-800 transition-colors ${
+                language === lang.code ? 'bg-amber-400/10' : ''
               }`}
             >
-              <span className="text-xl">{lang.flag}</span>
-              <span className="text-xs font-medium text-zinc-400 flex-1 text-left">
+              <span className="text-base">{lang.flag}</span>
+              <span className={`text-xs font-medium tracking-wide ${
+                language === lang.code ? 'text-amber-400' : 'text-zinc-300'
+              }`}>
                 {lang.code.toUpperCase()}
               </span>
               {language === lang.code && (
                 <svg
-                  className="w-4 h-4 text-amber-400"
+                  className="ml-auto w-3.5 h-3.5 text-amber-400"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
