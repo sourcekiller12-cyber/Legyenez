@@ -5,7 +5,7 @@ import logging
 from datetime import datetime, timezone
 
 # Import routes
-from routes import auth, scripts, hooks, metrics, videos, analytics, notion_analytics
+from routes import auth, scripts, hooks, metrics, videos, analytics, notion_analytics, saved_voices
 from utils.database import init_database
 from database import db
 
@@ -36,6 +36,7 @@ api_router.include_router(metrics.router, prefix="/metrics", tags=["Metrics"])
 api_router.include_router(videos.router, prefix="/videos", tags=["Videos"])
 api_router.include_router(analytics.router, prefix="/analytics", tags=["Analytics"])
 api_router.include_router(notion_analytics.router, prefix="/notion-analytics", tags=["Notion Analytics"])
+api_router.include_router(saved_voices.router, prefix="/saved-voices", tags=["Saved Voices"])
 
 # Include router in app
 app.include_router(api_router)
