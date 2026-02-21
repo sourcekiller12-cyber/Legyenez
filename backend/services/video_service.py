@@ -243,13 +243,18 @@ class VideoGenerationService:
         """
         try:
             # Calculate number of clips needed (2.5s avg per clip)
-            num_clips = int(total_duration / 2.5) + 1
+            num_clips = int(total_duration / 2.5) + 2  # Extra clips for variety
+            
+            # Enhance search query for faith content
+            if not search_query or search_query == "spirituality faith peaceful":
+                search_query = "faith prayer spiritual light hope peace"
             
             # Search Pexels for vertical videos
             headers = {"Authorization": self.pexels_api_key}
             params = {
                 "query": search_query,
                 "orientation": "portrait",
+                "size": "medium",
                 "per_page": min(num_clips, 15)
             }
             
