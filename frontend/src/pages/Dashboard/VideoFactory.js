@@ -96,6 +96,32 @@ export default function VideoFactory() {
     }
   };
 
+  const handleDownload = async (videoId) => {
+    try {
+      toast.info('Letöltés indul...');
+      
+      const response = await api.get(`/videos/${videoId}/download`, {
+        responseType: 'blob'
+      });
+      
+      // Create blob URL and trigger download
+      const blob = new Blob([response.data], { type: 'video/mp4' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `legyenez_${videoId.slice(0, 8)}.mp4`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success('Letöltés sikeres!');
+    } catch (error) {
+      console.error('Download failed:', error);
+      toast.error('Letöltés sikertelen: ' + (error.response?.data?.detail || error.message));
+    }
+  };
+
   const handleGenerateVideo = async () => {
     if (!selectedScript) {
       toast.error('Válassz ki egy scriptet!');
