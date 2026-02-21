@@ -101,12 +101,20 @@ export default function VideoFactory() {
       return;
     }
 
+    // Determine final voice ID
+    const finalVoiceId = voiceOption === 'custom' ? customVoiceId : voiceId;
+
+    if (!finalVoiceId) {
+      toast.error('Válassz voice-t vagy adj meg custom Voice ID-t!');
+      return;
+    }
+
     setGenerating(true);
 
     try {
       await api.post('/videos/generate', {
         script_id: selectedScript,
-        voice_id: voiceId || null,
+        voice_id: finalVoiceId,
         voice_settings: voiceSettings,
         background_music: backgroundMusic || null,
         b_roll_search: brollSearch || null
