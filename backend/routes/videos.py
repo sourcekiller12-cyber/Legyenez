@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
+from fastapi.responses import FileResponse
 from typing import List, Optional
 import logging
+from pathlib import Path
 
 from models import Video, VideoGenerateRequest
 from routes.auth import get_current_user
@@ -94,3 +96,30 @@ async def get_video(video_id: str, current_user = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="Video not found")
     
     return video
+
+@router.get("/{video_id}/download")
+async def download_video(video_id: str, current_user = Depends(get_current_user)):
+    """
+    Download completed video file.
+    """
+    video = await db.videos.find_one(
+        {"id": video_id, "user_id": current_user["id"]},
+        {"_id": 0}
+    )
+    
+    if not video:
+        raise HTTPException(status_code=404, detail="Video not found")
+    
+    if video.get("status") != "completed":
+        raise HTTPException(status_code=400, detail="Video is not ready yet")
+    
+    video_path = Path(video.get("video_url"))
+    
+    if not video_path.exists():
+        raise HTTPException(status_code=404, detail="Video file not found")
+    
+    return FileResponse(
+        path=str(video_path),
+        media_type="video/mp4",
+        filename=f"legyenez_{video_id[:8]}.mp4"
+    )
