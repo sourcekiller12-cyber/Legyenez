@@ -104,6 +104,7 @@ class Metric(BaseModel):
 # ===== VIDEO MODELS =====
 class VideoGenerateRequest(BaseModel):
     script_id: str
+    voice_id: Optional[str] = None
     voice_settings: Optional[dict] = None
     background_music: Optional[str] = None
     b_roll_search: Optional[str] = None
