@@ -784,7 +784,9 @@ export const LanguageProvider = ({ children }) => {
   }, [language]);
 
   const t = (key) => {
-    return translations[language]?.[key] || translations['hu'][key] || key;
+    // US uses the same translations as EN
+    const langCode = language === 'us' ? 'en' : language;
+    return translations[langCode]?.[key] || translations['hu'][key] || key;
   };
 
   return (
