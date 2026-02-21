@@ -62,7 +62,7 @@ class FFmpegService:
     async def concatenate_broll(broll_clips: List[Path], output_path: Path, total_duration: float):
         """
         Concatenate B-roll clips to match total duration.
-        Each clip is cut to 2-3 seconds and looped as needed.
+        Each clip is cut to EXACTLY 2.5 seconds and looped as needed.
         """
         if not broll_clips:
             # Create black video if no B-roll available
@@ -75,21 +75,42 @@ class FFmpegService:
             subprocess.run(cmd, check=True, capture_output=True)
             return
         
-        # Create concat file
-        concat_file = output_path.parent / "concat_list.txt"
+        # Create individual 2.5 second clips first
+        clip_duration = 2.5
+        temp_clips = []
         
-        clip_duration = 2.5  # Average clip duration
+        for i, clip_path in enumerate(broll_clips):
+            temp_clip = output_path.parent / f"temp_clip_{i}.mp4"
+            
+            # Cut each clip to exactly 2.5 seconds
+            cmd = [
+                'ffmpeg',
+                '-i', str(clip_path),
+                '-t', str(clip_duration),
+                '-vf', f'scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30',
+                '-c:v', 'libx264',
+                '-preset', 'fast',
+                '-crf', '23',
+                '-an',  # Remove audio from B-roll
+                str(temp_clip), '-y'
+            ]
+            
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            if result.returncode == 0:
+                temp_clips.append(temp_clip)
+        
+        if not temp_clips:
+            logger.error("No valid B-roll clips after processing")
+            return
+        
+        # Create concat file with properly cut clips
+        concat_file = output_path.parent / "concat_list.txt"
         clips_needed = int(total_duration / clip_duration) + 1
         
         with open(concat_file, 'w') as f:
             for i in range(clips_needed):
-                clip_idx = i % len(broll_clips)
-                clip_path = broll_clips[clip_idx]
-                
-                # Write multiple times if needed
-                f.write(f"file '{clip_path}'\n")
-                f.write(f"inpoint 0\n")
-                f.write(f"outpoint {clip_duration}\n")
+                clip_idx = i % len(temp_clips)
+                f.write(f"file '{temp_clips[clip_idx]}'\n")
         
         # Concatenate clips
         cmd = [
@@ -97,15 +118,17 @@ class FFmpegService:
             '-f', 'concat',
             '-safe', '0',
             '-i', str(concat_file),
-            '-vf', f'scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30',
             '-t', str(total_duration),
-            '-c:v', 'libx264',
-            '-preset', 'medium',
-            '-crf', '23',
+            '-c', 'copy',
             str(output_path), '-y'
         ]
         
         result = subprocess.run(cmd, capture_output=True, text=True)
+        
+        # Cleanup temp files
+        for temp_clip in temp_clips:
+            temp_clip.unlink(missing_ok=True)
+        concat_file.unlink(missing_ok=True)
         
         if result.returncode != 0:
             logger.error(f"FFmpeg concat error: {result.stderr}")
