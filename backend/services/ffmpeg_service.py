@@ -155,20 +155,20 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         else:
             # Use word timestamps from ElevenLabs
             for i, char_data in enumerate(word_timestamps):
-                if hasattr(char_data, 'character') and hasattr(char_data, 'start_time_ms'):
-                    char = char_data.character
-                    start_ms = char_data.start_time_ms
+                if isinstance(char_data, dict) and 'character' in char_data and 'start_time_ms' in char_data:
+                    char = char_data['character']
+                    start_ms = char_data['start_time_ms']
                     
                     # Find end time (next character or duration)
                     end_ms = duration * 1000
-                    if i < len(word_timestamps) - 1 and hasattr(word_timestamps[i+1], 'start_time_ms'):
-                        end_ms = word_timestamps[i+1].start_time_ms
+                    if i < len(word_timestamps) - 1 and isinstance(word_timestamps[i+1], dict) and 'start_time_ms' in word_timestamps[i+1]:
+                        end_ms = word_timestamps[i+1]['start_time_ms']
                     
                     start_time = FFmpegService.format_ass_time(start_ms / 1000.0)
                     end_time = FFmpegService.format_ass_time(end_ms / 1000.0)
                     karaoke_duration = int((end_ms - start_ms) / 10)
                     
-                    ass_content += f"Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{{\\k{karaoke_duration}}}{char}"
+                    ass_content += f"Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{{\\k{karaoke_duration}}}{char} "
         
         # Write ASS file
         with open(output_path, 'w', encoding='utf-8') as f:
