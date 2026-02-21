@@ -37,6 +37,7 @@ export default function VideoFactory() {
   const [generating, setGenerating] = useState(false);
 
   // Voice Settings
+  const [voiceId, setVoiceId] = useState('');
   const [voiceSettings, setVoiceSettings] = useState({
     stability: 0.7,
     similarity_boost: 0.75,
@@ -93,6 +94,7 @@ export default function VideoFactory() {
     try {
       await api.post('/videos/generate', {
         script_id: selectedScript,
+        voice_id: voiceId || null,
         voice_settings: voiceSettings,
         background_music: backgroundMusic || null,
         b_roll_search: brollSearch || null
@@ -223,6 +225,19 @@ export default function VideoFactory() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div>
+                <Label className="text-zinc-300">Voice ID</Label>
+                <Input
+                  placeholder="pl. CBPNfSFlxFnoBab9ZbDZ"
+                  value={voiceId}
+                  onChange={(e) => setVoiceId(e.target.value)}
+                  className="bg-zinc-800 border-zinc-700 text-white mt-1"
+                />
+                <p className="text-xs text-zinc-500 mt-1">
+                  Saját ElevenLabs voice ID a hangodhoz
+                </p>
+              </div>
+
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <Label className="text-zinc-300">Stability</Label>
