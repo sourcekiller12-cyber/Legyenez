@@ -353,6 +353,24 @@ export default function VideoFactory() {
                 />
               </div>
 
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-zinc-300">Speed (Sebesség)</Label>
+                  <span className="text-sm text-amber-400">{voiceSettings.speed.toFixed(2)}x</span>
+                </div>
+                <Slider
+                  value={[voiceSettings.speed]}
+                  onValueChange={([val]) => setVoiceSettings({ ...voiceSettings, speed: val })}
+                  min={0.25}
+                  max={4.0}
+                  step={0.1}
+                  className="w-full"
+                />
+                <p className="text-xs text-zinc-500 mt-1">
+                  Hang sebessége (0.25x = lassú, 4.0x = gyors)
+                </p>
+              </div>
+
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
